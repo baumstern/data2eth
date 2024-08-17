@@ -1,0 +1,28 @@
+{
+  "name": "uploader",
+  "version": "0.0.0",
+  "description": "API server that upload input JSON data to the blockchain",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "clean": "rimraf coverage build tmp",
+    "prebuild": "npm run lint",
+    "prettier": "prettier --config .prettierrc --write ."
+  },
+  "dependencies": {
+    "fastify": "^4.28.1",
+    "tslib": "~2.6",
+    "viem": "^2.19.6"
+  },
+  "devDependencies": {
+    "prettier": "~3.2",
+    "rimraf": "~5.0"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">= 20.9"
+  },
+  "volta": {
+    "node": "20.12.2"
+  }
+}
