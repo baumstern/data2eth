@@ -4,7 +4,7 @@ import { sepolia } from 'viem/chains';
 
 export async function cast(body) {
   const account = privateKeyToAccount(
-    '',
+    process.env.ETH_PRIVATE_KEY,
   );
 
   const client = createWalletClient({
