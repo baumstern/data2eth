@@ -7,6 +7,10 @@ jobs:
   doc:
     runs-on: ubuntu-latest
 
+    permissions:
+      pages: write
+      id-token: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,9 +20,8 @@ jobs:
         with:
           output: swagger-ui
           spec-file: client/openapi.yaml
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ github.token }}
           publish_dir: swagger-ui
