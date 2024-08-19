@@ -1,7 +1,7 @@
 {
-  "name": "uploader",
+  "name": "data2eth",
   "version": "0.0.0",
-  "description": "API server that upload input JSON data to the blockchain",
+  "description": "API server that uploads JSON data to the blockchain",
   "type": "module",
   "scripts": {
     "start": "node --env-file .env src/main.js",
