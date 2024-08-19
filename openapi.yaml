@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: marine cleanup log uploader
+  description: |-
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+servers:
+  - url: http://127.0.0.1:3000
+
+paths:
+  /upload:
+    post:
+      summary: Upload action to the blockchain
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Action'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+
+components:
+  schemas:
+    Action:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the action
+          example: el_24_311de9a
+        action:
+          type: string
+          enum:
+            - fishing_for_litter
+            - prevention
+            - beach_cleanup
+            - ad_hoc
+          description: Type of action
+        actor_id:
+          type: string
+          description: Unique identifier for the actor (Vessel name)
+          example: gr_d24d0a9
+        action_detail:
+          type: object
+          properties:
+            date:
+              type: integer
+              format: int64
+              description: Date of log
+              example: 1724020996
+            type:
+              type: string
+              enum:
+                - plastic
+                - metal
+                - nets
+              example: plastic
+            weight:
+              type: number
+              format: float
+              description: Weight of the waste collected, in kilograms
+              example: 3
+            port:
+              type: string
+              description: The port where the vessel delivers collected marine waste
+              example: ΚΑΒΑΛΑ
+
+      required:
+        - id
+        - action
+        - actor_name
+        - actor_id
+        - action_detail
+    ApiResponse:
+      type: object
+      properties:
+        txReceipt:
+          type: string
+          example: "blockHash: '0x97451b947a3c282ac6ef0a300d1290808b6182e8122fa00b7563c8f6244006d7'
+                    blockNumber: '6527172'
+                    contractAddress: null
+                    cumulativeGasUsed: '13002243'
+                    effectiveGasPrice: '99858298'
+                    from: '0x2f5416f811e73111269bf4ba3c1cf1de0aeefed1'
+                    gasUsed: '23592'
+                    logs: []
+                    logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+                    status: success
+                    to: '0x2f5416f811e73111269bf4ba3c1cf1de0aeefed1'
+                    transactionHash: '0x367a946c9da76254235bd2531b74503c90283ecbd745e699be21d7ddc22f02ea'
+                    transactionIndex: 104
+                    type: eip1559
+                    "
