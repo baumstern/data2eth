@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: marine cleanup log uploader
+  title: Enaleia log uploader
   description: |-
 
   license:
@@ -37,22 +37,32 @@ components:
     Action:
       type: object
       properties:
+        meta_data:
+          type: object
+          properties:
+            data_model:
+              type: string
+              example: enaleia_data_log
+            data_model_version:
+              type: string
+              example: v20240821
         id:
           type: string
           description: Unique identifier for the action
           example: el_24_311de9a
-        action:
+        action_category:
           type: string
           enum:
-            - fishing_for_litter
-            - prevention
-            - beach_cleanup
-            - ad_hoc
-          description: Type of action
+            - ocean_cleanup
+          description: Broad category of the action
         actor_id:
           type: string
-          description: Unique identifier for the actor (Vessel name)
+          description: Unique identifier for the actor in machine-readable format
           example: gr_d24d0a9
+        actor_name:
+          type: string
+          description: Name of the actor (typically the vessel name in Enaleia context)
+          example: ΧΥΜΑ ΚΑΒΑΛΑ
         action_detail:
           type: object
           properties:
@@ -60,24 +70,41 @@ components:
               type: integer
               format: int64
               description: Date of log
-              example: 1724020996
-            type:
+              example: 1696204800
+            action_type:
+              type: string
+              enum:
+                - fishing_for_litter
+                - prevention
+                - beach_cleanup
+                - ad_hoc
+            waste_type:
               type: string
               enum:
                 - plastic
                 - metal
                 - nets
               example: plastic
-            weight:
+            waste_weight:
               type: number
               format: float
               description: Weight of the waste collected, in kilograms
-              example: 3
+              example: 250
             port:
               type: string
               description: The port where the vessel delivers collected marine waste
               example: ΚΑΒΑΛΑ
-
+            country:
+              type: string
+              description: The country where the port receiving the ocean waste is located
+              example: GR
+            weight_logging_method:
+              type: string
+              description: Indicates whether the weight logged is an estimation (E) or verified by a weighslip (Z)
+              enum:
+                - E
+                - Z
+              example: E
       required:
         - id
         - action
