@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Transaction Sender</title>
+</head>
+<body>
+    <h1>Send Ethereum Transaction</h1>
+    <form id="txForm">
+        <textarea id="txData" rows="10" cols="50" placeholder="Enter text (up to 5KB)" maxlength="5120" oninput="updateCount()"></textarea><br>
+        <div id="charCount">0 / 5120</div>
+        <script>
+            function updateCount() {
+                const txData = document.getElementById('txData');
+                const charCount = document.getElementById('charCount');
+                charCount.innerText = `${txData.value.length} / 5120`;
+            }
+        </script>
+        <button type="submit">Send Transaction</button>
+    </form>
+    <div id="status"></div>
+
+    <script type = "module">
+        import { createWalletClient, http, publicActions, toHex } from 'https://esm.sh/viem'
+        import { privateKeyToAccount } from 'https://esm.sh/viem/accounts'
+        import { sepolia } from 'https://esm.sh/viem/chains'
+
+        document.getElementById('txForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const txData = document.getElementById('txData').value;
+            if (txData.length === 0) {
+                alert('Please enter some text.');
+                return;
+            }
+
+            document.querySelector('button').style.display = 'none';
+            document.getElementById('status').innerText = 'Waiting for transaction...';
+
+            try {
+
+                const privateKey = "<YOUR_RPIVATE_KEY>";
+                const account = privateKeyToAccount(
+                    privateKey,
+                );
+
+                const client = createWalletClient({
+                    account,
+                    chain: sepolia,
+                    transport: http(),
+                }).extend(publicActions);
+
+                const hash = await client.sendTransaction({
+                to: account.address,
+                value: 0,
+                data: toHex(txData),
+                });
+
+                document.getElementById('status').innerText = 'Transaction sent. Waiting for confirmation...';
+
+                const txReceipt = await client.waitForTransactionReceipt({
+                hash: hash,
+            });
+
+                document.getElementById('status').innerHTML = `
+                    Transaction included in block!<br>
+                    Block Number: ${txReceipt.blockNumber}<br>
+                    Block Hash: ${txReceipt.blockHash}<br>
+                    Transaction Hash: ${txReceipt.transactionHash}<br>
+                    <a href="https://sepolia.etherscan.io/tx/${txReceipt.transactionHash}" target="_blank">View on Etherscan</a>
+                `;
+            } catch (error) {
+                document.getElementById('status').innerText = 'Error sending transaction.';
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
